@@ -20,6 +20,11 @@ async function bootstrap() {
   if (config.get<boolean>('app.api_version'))
     app.enableVersioning({ type: VersioningType.URI });
 
+  app.enableCors({
+    origin: config.get<boolean>('app.cors_origin', true),
+    credentials: config.get<boolean>('app.cors_credentials', true),
+  });
+
   const port = config.get<number>('app.port');
   const env = config.get<ENV_TYPE>('app.env');
   await app.listen(port);
