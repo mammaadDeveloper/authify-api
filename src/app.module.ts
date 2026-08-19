@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import appConfig from './config/app.config';
+import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import appConfig from './config/app.config';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import appConfig from './config/app.config';
       envFilePath: '../.env',
       load: [appConfig],
     }),
+    DatabaseModule,
     AuthModule,
     UserModule,
   ],
