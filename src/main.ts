@@ -4,12 +4,27 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { ConfigService } from '@nestjs/config';
+import { Logger, VersioningType } from '@nestjs/common';
+import { ENV_TYPE } from './common/types/config.type';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  const config = app.get(ConfigService);
+
+  app.setGlobalPrefix(config.get('app.prefix'));
+
+  if (config.get<boolean>('app.api_version'))
+    app.enableVersioning({ type: VersioningType.URI });
+
+  const port = config.get<number>('app.port');
+  const env = config.get<ENV_TYPE>('app.env');
+  await app.listen(port);
+
+  if (env == 'development')
+    Logger.verbose(`Application running on port ${port}`);
 }
 bootstrap();
