@@ -5,8 +5,9 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { Logger, VersioningType } from '@nestjs/common';
 import { ENV_TYPE } from './common/types/config.type';
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,11 +19,10 @@ async function bootstrap() {
   const config = app.get(ConfigService);
 
   // Global prefix
-  app.setGlobalPrefix(config.get('app.prefix'));
+  app.setGlobalPrefix('api');
 
   // Enable versioning if configured
-  if (config.get<boolean>('app.api_version'))
-    app.enableVersioning({ type: VersioningType.URI });
+  app.enableVersioning({ type: VersioningType.URI });
 
   // Enable CORS
   app.enableCors({
@@ -32,17 +32,22 @@ async function bootstrap() {
 
   // Use global validation pipe
   app.useGlobalPipes(
-    new ValidationPipe({
+    new I18nValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
+      transform: true,
     }),
+  );
+
+  // Filters
+  app.useGlobalFilters(
+    new I18nValidationExceptionFilter({ detailedErrors: false }),
   );
 
   // Start the application
   const port = config.get<number>('app.port');
+  const host = config.get('app.host');
   const env = config.get<ENV_TYPE>('app.env');
-  await app.listen(port);
+  await app.listen(port, host);
 
   // Log application start
   if (env == 'development')

@@ -1,0 +1,8 @@
+{
+    "user": {
+        "name": {
+            "required": "username is require.",
+            "min_length": "username not under 10 character."
+        }
+    }
+}
