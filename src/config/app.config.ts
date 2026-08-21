@@ -11,5 +11,6 @@ export default registerAs('app', () => ({
   port: parseInt(process.env.PORT || '3000') || 3000,
 
   prefix: process.env.API_PREFIX || '',
-  api_version: Boolean(process.env.API_VERSION) || false,
+
+  fallback_locale: process.env.FALLBACK_LOCALE || 'en',
 }));

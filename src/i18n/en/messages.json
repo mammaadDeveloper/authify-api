@@ -1,0 +1,8 @@
+{
+  "errors": {
+    "internal": "Internal server error.",
+    "unauthorized": "Unauthorized access.",
+    "forbidden": "Forbidden access.",
+    "user_already_exists": "User already exists."
+  }
+}

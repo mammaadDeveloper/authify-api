@@ -1,0 +1,15 @@
+{
+  "user": {
+    "name": {
+      "required": "username is required.",
+      "min_length": "username not under 10 character."
+    },
+    "email": {
+      "required": "email is required.",
+      "correct": "email must be valid."
+    },
+    "password": {
+        "required":"password is required."
+    }
+  }
+}
