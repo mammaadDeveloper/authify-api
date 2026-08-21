@@ -3,7 +3,10 @@ import { UserService } from '../user/user.service';
 import { UserCreateInput } from 'src/database/models';
 import { SignUpResponse } from './dto/response.dto';
 import { I18nService } from 'nestjs-i18n';
-
+type SigninData = {
+  email: string;
+  password: string;
+};
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,7 +28,9 @@ export class AuthService {
     });
   }
 
-  signin() {}
+  signin(data: SigninData) {
+    console.log(data);
+  }
 
   signout() {}
 

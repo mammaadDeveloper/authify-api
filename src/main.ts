@@ -49,6 +49,7 @@ async function bootstrap() {
     new I18nValidationExceptionFilter({ detailedErrors: false }),
   );
 
+  // Interceptors
   app.useGlobalInterceptors(
     new ClassSerializerInterceptor(app.get(Reflector)),
     new ResponseInterceptor(app.get(Reflector)),
