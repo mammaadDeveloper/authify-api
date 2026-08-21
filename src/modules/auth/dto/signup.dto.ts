@@ -1,13 +1,14 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsString,
   IsStrongPassword,
+  MinLength,
 } from 'class-validator';
-
-export class SignupDto {
-  @IsNotEmpty()
-  @IsString()
+export class SignUpDto {
+  @IsNotEmpty({
+    message: 'validation.user.name.required',
+  })
+  @MinLength(10, { message: 'validation.user.name.min_length' })
   name: string;
 
   @IsNotEmpty()
@@ -15,13 +16,6 @@ export class SignupDto {
   email: string;
 
   @IsNotEmpty()
-  @IsString()
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 3,
-    minUppercase: 1,
-    minSymbols: 0,
-    minNumbers: 4,
-  })
+  @IsStrongPassword()
   password: string;
 }
