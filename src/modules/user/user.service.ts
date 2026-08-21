@@ -24,4 +24,7 @@ export class UserService {
 
     return this.repository.create(data);
   }
+  findById(id: number) {
+    return this.repository.findById(id);
+  }
 }

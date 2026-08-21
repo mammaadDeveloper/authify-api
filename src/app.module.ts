@@ -7,14 +7,24 @@ import { UserModule } from './modules/user/user.module';
 import databaseConfig from './config/database.config';
 import { I18nModule } from 'nestjs-i18n';
 import path from 'path';
+import { JwtModule } from '@nestjs/jwt';
+import { TokenModule } from './modules/token/token.module';
+import jwtConfig from './config/jwt.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, jwtConfig],
     }),
     DatabaseModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.getOrThrow('jwt.secret'),
+      }),
+    }),
     I18nModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,6 +42,7 @@ import path from 'path';
     }),
     AuthModule,
     UserModule,
+    TokenModule,
   ],
 })
 export class AppModule {}
