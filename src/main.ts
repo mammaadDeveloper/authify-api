@@ -5,7 +5,13 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
-import { Logger, VersioningType } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  VersioningType,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ENV_TYPE } from './common/types/config.type';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
 
@@ -41,6 +47,11 @@ async function bootstrap() {
   // Filters
   app.useGlobalFilters(
     new I18nValidationExceptionFilter({ detailedErrors: false }),
+  );
+
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector)),
+    new ResponseInterceptor(app.get(Reflector)),
   );
 
   // Start the application
