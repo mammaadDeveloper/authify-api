@@ -20,6 +20,10 @@ export class UserRepository {
     return await this.db.user.findFirst({ where: { name } });
   }
 
+  async findByEmail(email: string) {
+    return await this.db.user.findFirst({ where: { email } });
+  }
+
   async create(data: UserCreateInput) {
     return await this.db.user.create({ data });
   }

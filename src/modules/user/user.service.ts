@@ -17,6 +17,10 @@ export class UserService {
     return await this.repository.findByName(name);
   }
 
+  async findByEmail(email: string) {
+    return await this.repository.findByEmail(email);
+  }
+
   async create(data: UserCreateInput) {
     const user = await this.findByName(data.name);
 

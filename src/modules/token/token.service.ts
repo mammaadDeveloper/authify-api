@@ -29,6 +29,22 @@ export class TokenService {
       refresh,
     };
   }
+
+  async rotateToken(refreshToken: string, userId: number) {
+    const storedToken = await this.repo.findActiveToken(
+      this.hash.hash(refreshToken),
+      userId,
+    );
+
+    if (!storedToken) return null;
+
+    await this.repo.revokeToken(storedToken.id);
+    return this.createToken(userId);
+  }
+
+  async revokeUserTokens(userId: number) {
+    await this.repo.revokeUserTokens(userId);
+  }
   private generate(userId: number): { access: string; refresh: string } {
     const access = this.jwt.sign(
       { sub: userId, type: 'access' },
