@@ -14,7 +14,6 @@ import { Reflector } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { ENV_TYPE } from './common/types/config.type';
 import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
-import { AccessGuard } from './modules/token/guards/access.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -44,9 +43,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
-  // Guards
-  app.useGlobalGuards(new AccessGuard());
 
   // Filters
   app.useGlobalFilters(

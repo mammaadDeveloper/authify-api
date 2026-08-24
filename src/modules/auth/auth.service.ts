@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { UserCreateInput } from 'src/database/models';
 import { SignUpResponse } from './dto/response.dto';
 import { I18nService } from 'nestjs-i18n';
+import { TokenService } from '../token/token.service';
 type SigninData = {
   email: string;
   password: string;
@@ -11,20 +12,23 @@ type SigninData = {
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly token: TokenService,
     private readonly i18n: I18nService,
   ) {}
 
-  signup(data: UserCreateInput) {
-    const user = this.userService.create(data);
+  async signup(data: UserCreateInput) {
+    const user = await this.userService.create(data);
 
     if (!user)
       throw new InternalServerErrorException(
         this.i18n.translate('messages.errors.internal'),
       );
 
+    const { access, refresh } = await this.token.createToken(user.id);
+
     return new SignUpResponse({
-      access: 'access_token',
-      refresh: 'refresh_token',
+      access: access,
+      refresh: refresh,
     });
   }
 

@@ -3,6 +3,7 @@ import { SignUpDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { SigninDto } from './dto/signin.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller({
   version: '1',
@@ -12,6 +13,7 @@ export class AuthController {
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   @ResponseMessage('User signed up successfully')
+  @Public()
   signup(@Body() body: SignUpDto) {
     return this.service.signup(body);
   }
