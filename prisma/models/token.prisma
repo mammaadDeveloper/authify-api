@@ -1,0 +1,29 @@
+model Token {
+    id        String @id @default(uuid())
+    token     String @unique
+
+    userId Int  @map("user_id")
+    user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    expiresAt DateTime @map("expired_at")
+    revokedAt DateTime? @map("revoked_at")
+
+    tokenId   String? @unique @map("token_id")
+    tokenBy   Token?  @relation("TokenRotation", fields: [tokenId], references: [id])
+    tokenFrom Token?  @relation("TokenRotation")
+
+    status TokenStatus @default(ACTIVATE)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@index([token])
+    @@map("tokens")
+}
+
+enum TokenStatus {
+    ACTIVATE
+    DEACTIVATE
+    REVOKED
+    TERMINATED
+}

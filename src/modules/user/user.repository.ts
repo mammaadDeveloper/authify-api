@@ -6,21 +6,25 @@ import { UserCreateInput } from 'src/database/models';
 export class UserRepository {
   constructor(private readonly db: DatabaseService) {}
 
-  findMany() {
-    return this.db.user.findMany();
+  async findMany() {
+    return await this.db.user.findMany();
   }
 
-  findById(id: number) {
-    return this.db.user.findFirst({
+  async findById(id: number) {
+    return await this.db.user.findFirst({
       where: { id },
     });
   }
 
-  findByName(name: string) {
-    return this.db.user.findFirst({ where: { name } });
+  async findByName(name: string) {
+    return await this.db.user.findFirst({ where: { name } });
   }
 
-  create(data: UserCreateInput) {
-    return this.db.user.create({ data });
+  async findByEmail(email: string) {
+    return await this.db.user.findFirst({ where: { email } });
+  }
+
+  async create(data: UserCreateInput) {
+    return await this.db.user.create({ data });
   }
 }

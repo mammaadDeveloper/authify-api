@@ -7,12 +7,17 @@ import { UserModule } from './modules/user/user.module';
 import databaseConfig from './config/database.config';
 import { I18nModule } from 'nestjs-i18n';
 import path from 'path';
+import { TokenModule } from './modules/token/token.module';
+import { EncryptionModule } from './shared/encryption/encryption.module';
+import jwtConfig from './config/jwt.config';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessGuard } from './modules/token/guards/access.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig],
+      load: [appConfig, databaseConfig, jwtConfig],
     }),
     DatabaseModule,
     I18nModule.forRootAsync({
@@ -32,6 +37,14 @@ import path from 'path';
     }),
     AuthModule,
     UserModule,
+    TokenModule,
+    EncryptionModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessGuard,
+    },
   ],
 })
 export class AppModule {}
